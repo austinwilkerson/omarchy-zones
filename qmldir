@@ -1,0 +1,6 @@
+singleton Runtime 1.0 Runtime.qml
+Settings 1.0 Settings.qml
+Service 1.0 Service.qml
+Appearance 1.0 Appearance.qml
+LayoutSettings 1.0 LayoutSettings.qml
+ColorPicker 1.0 ColorPicker.qml

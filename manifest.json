@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.austinwilkerson.zones",
+  "name": "Omarchy Zones",
+  "version": "0.4.0",
+  "author": "Austin Wilkerson",
+  "license": "MIT",
+  "description": "Zone snapping for Omarchy Floating workspaces, with overlapping layouts and customizable previews.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Settings.qml"
+  },
+  "barWidget": {
+    "displayName": "Zones",
+    "description": "Layouts, padding and preview colors",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
