@@ -31,5 +31,7 @@
   "workspace_override": "This workspace has its own layout. Select the Workspace tab to adjust it.",
   "inherit": "Use inherited layout",
   "preparing": "Preparing Zones for this Hyprland version\u2026",
-  "retry": "Retry setup"
+  "retry": "Retry setup",
+  "layout_halves-vertical": "50 \u00b7 50 vertical",
+  "layout_thirds-vertical": "33 \u00b7 33 \u00b7 33 vertical"
 }

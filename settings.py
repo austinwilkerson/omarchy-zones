@@ -13,7 +13,7 @@ import tempfile
 def validate_patch(patch):
     if not isinstance(patch, dict) or set(patch) - {'gap_px', 'preview', 'monitors', 'workspaces'}:
         raise ValueError('Unsupported settings')
-    layouts = {'halves', 'thirds', '25-50-25', 'quarters-cols', 'grid-2x2', 'columns-mid50'}
+    layouts = {'halves', 'halves-vertical', 'thirds', 'thirds-vertical', '25-50-25', 'quarters-cols', 'grid-2x2', 'columns-mid50'}
     for key in ('monitors', 'workspaces'):
         if key not in patch: continue
         values = patch[key]

@@ -1,4 +1,4 @@
-# Validation — 0.4.0 preview
+# Validation — 0.4.1 preview
 
 ## Environment
 
@@ -9,11 +9,11 @@ custom color picker.
 
 ## Automated coverage
 
-47 Python unit tests cover layout selection and overlaps, monitor/workspace
+49 Python unit tests cover layout selection and overlaps, monitor/workspace
 precedence, strict Floating-mode gating, complete-frame geometry, all four bar
 and dock edges, scale/rotation/negative origins, uniform odd and even gaps,
 release/resize gesture state, bounded observer parsing, preference persistence,
-input validation, build-cache reuse and invalidation, and build failure handling.
+stacked horizontal-row layouts, input validation, build-cache reuse and invalidation, and build failure handling.
 
 Separate Quickshell fixtures verify theme and custom color bindings, picker
 synchronization, preference persistence, all six layout choices, workspace
@@ -49,3 +49,10 @@ hardware compatibility claim is made.
 - App-specific minimum sizes or unusual decoration overrides may constrain fit.
 - GitHub CI runs Python tests and syntax checks; native compilation and shell
   fixtures require the documented Omarchy environment and are checked locally.
+
+## Additional user confirmation
+
+The user reported that version 0.4.0 loaded and worked on a second machine,
+a 5090 desktop. Its exact Omarchy/Hyprland versions were not independently
+checked, and the new vertical presets have not yet been confirmed on that
+machine.

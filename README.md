@@ -37,7 +37,9 @@ workspace override.
 | Preset | Zones |
 | --- | --- |
 | 50 · 50 | Two equal columns |
+| 50 · 50 vertical | Top and bottom halves |
 | 33 · 33 · 33 | Three equal columns |
+| 33 · 33 · 33 vertical | Top, middle and bottom rows |
 | 25 · 50 · 25 | Wide center with narrow sides |
 | 25 · 25 · 25 · 25 | Four equal columns |
 | Four-square grid | Top-left, top-right, bottom-left and bottom-right |

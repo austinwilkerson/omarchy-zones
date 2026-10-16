@@ -15,7 +15,7 @@ Column {
     readonly property int workspace: selectedMonitor ? selectedMonitor.activeWorkspace.id : 0
     readonly property string selectedLayout: scope === "workspace" ? appearance.layoutFor(monitorName, workspace) :
         (appearance.config.monitors || {})[monitorName] || appearance.config.default || "columns-mid50"
-    readonly property var presets: ["halves", "thirds", "25-50-25", "quarters-cols", "grid-2x2", "columns-mid50"]
+    readonly property var presets: ["halves", "halves-vertical", "thirds", "thirds-vertical", "25-50-25", "quarters-cols", "grid-2x2", "columns-mid50"]
     spacing: Commons.Style.space(12)
     Commons.Translations { id: strings; directory: Qt.resolvedUrl("i18n") }
     function refresh() { if (!query.running) query.running = true }

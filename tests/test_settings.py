@@ -63,9 +63,9 @@ class SettingsTests(unittest.TestCase):
             self.assertEqual(layout_for_monitor(load_config(base,path),'DP-4',workspace_id=1)[0],'grid-2x2')
             self.assertEqual(json.loads(base.read_text()),config)
 
-    def test_six_presets_and_overlapping_center_selection(self):
+    def test_eight_presets_and_overlapping_center_selection(self):
         config = load_config()
-        expected = {'halves':2,'thirds':3,'25-50-25':3,'quarters-cols':4,'grid-2x2':4,'columns-mid50':5}
+        expected = {'halves':2,'halves-vertical':2,'thirds':3,'thirds-vertical':3,'25-50-25':3,'quarters-cols':4,'grid-2x2':4,'columns-mid50':5}
         for name,count in expected.items():
             self.assertEqual(len(config['layouts'][name]),count)
             validate_patch({'monitors':{'DP-4':name}})
