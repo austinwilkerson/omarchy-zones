@@ -49,8 +49,8 @@ When zones overlap, the closest center among the zones containing the pointer
 wins. Occupied zones remain available; existing windows can overlap. Workspace
 overrides take priority and can be cleared with **Use inherited layout**.
 
-Drag to the left or right monitor edge for a half-width window, or to the top
-edge to fill the usable area. A window snaps when you release it, with the
+The Layouts tab also shows the edge gestures, which work with every preset:
+left edge → left 50%, right edge → right 50%, top edge → 100% of the usable area. A window snaps when you release it, with the
 landing preview showing its complete frame. Pausing during a drag does not snap,
 and a resize gesture preserves its manual size.
 

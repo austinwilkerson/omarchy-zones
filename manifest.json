@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.austinwilkerson.zones",
   "name": "Omarchy Zones",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Austin Wilkerson",
   "license": "MIT",
   "description": "Zone snapping for Omarchy Floating workspaces, with overlapping layouts and customizable previews.",

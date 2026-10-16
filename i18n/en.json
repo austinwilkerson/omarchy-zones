@@ -27,11 +27,13 @@
   "layout_quarters-cols": "25 \u00b7 25 \u00b7 25 \u00b7 25",
   "layout_grid-2x2": "Four-square grid",
   "layout_columns-mid50": "Four + center 50",
-  "overlap_help": "Overlapping zones are allowed. The closest zone center under your pointer wins; occupied zones can still be used. Drag to an edge for half or full width.",
+  "overlap_help": "Overlapping zones are allowed. The closest zone center under your pointer wins; occupied zones can still be used.",
   "workspace_override": "This workspace has its own layout. Select the Workspace tab to adjust it.",
   "inherit": "Use inherited layout",
   "preparing": "Preparing Zones for this Hyprland version\u2026",
   "retry": "Retry setup",
   "layout_halves-vertical": "50 \u00b7 50 vertical",
-  "layout_thirds-vertical": "33 \u00b7 33 \u00b7 33 vertical"
+  "layout_thirds-vertical": "33 \u00b7 33 \u00b7 33 vertical",
+  "edge_title": "Drag to screen edge \u00b7 any layout",
+  "edge_help": "Left edge \u2192 left 50%\nRight edge \u2192 right 50%\nTop edge \u2192 100% usable screen"
 }

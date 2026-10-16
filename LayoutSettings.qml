@@ -69,6 +69,12 @@ Column {
         text: root.scope === "workspace" ? strings.t("workspace_help") : strings.t("monitor_help")
         opacity: .7
     }
+    Column {
+        width: parent.width
+        spacing: Commons.Style.space(4)
+        Label { width: parent.width; text: strings.t("edge_title"); color: Commons.Color.accent }
+        Label { width: parent.width; text: strings.t("edge_help") }
+    }
     Grid {
         width: parent.width
         columns: 2
