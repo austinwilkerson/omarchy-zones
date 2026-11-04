@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1794" height="2096" viewBox="0 0 1794 2096">
+<rect width="1794" height="2096" fill="#13141f"/>
+<text x="897.0" y="93" text-anchor="middle" font-family="monospace" font-size="64" font-weight="bold" fill="#c0caf5">Floating Snap Zones</text>
+<text x="897.0" y="147" text-anchor="middle" font-family="monospace" font-size="28" fill="#a9b1d6">Custom snap layouts for floating windows.</text>
+<image x="48" y="180" width="833" height="1868" xlink:href="screenshots/layouts.png"/>
+<image x="913" y="180" width="833" height="1686" xlink:href="screenshots/appearance.png"/>
+</svg>

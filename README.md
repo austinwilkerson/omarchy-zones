@@ -137,7 +137,7 @@ python3 zonesd.py --dry-run --monitor 4096x1152 --pointer 2000,700
 For native helper development, `scripts/build-observer.sh /path/to/observer.so`
 builds without loading it into the compositor.
 
-[Original Layouts screenshot](docs/screenshots/layouts.png) ·
-[Original Appearance screenshot](docs/screenshots/appearance.png)
+[Full Layouts panel](docs/screenshots/layouts.png) ·
+[Full Appearance panel](docs/screenshots/appearance.png)
 
 MIT license. Issues and contributions are welcome.
