@@ -40,6 +40,45 @@ class RunnerTests(unittest.TestCase):
             self.assertNotEqual(runner.ensure_observer(self.root,self.cache),second)
             self.assertEqual(build.call_count,3)
 
+    def test_forced_retry_replaces_cache_and_then_reuses_result(self):
+        with patch.object(runner.subprocess,'check_output',return_value=json.dumps(self.version)), \
+             patch.object(runner.subprocess,'Popen',side_effect=self.fake_process) as build, \
+             patch.object(runner,'status'):
+            library=runner.ensure_observer(self.root,self.cache)
+            library.write_bytes(b'broken cached helper')
+            rebuilt=runner.ensure_observer(self.root,self.cache,force_rebuild=True)
+            self.assertEqual(rebuilt,library)
+            self.assertEqual(library.read_bytes(),b'compiled test fixture')
+            self.assertEqual(build.call_count,2)
+            self.assertEqual(runner.ensure_observer(self.root,self.cache),library)
+            self.assertEqual(build.call_count,2)
+
+    def test_failed_forced_retry_removes_stale_binary_and_can_recover(self):
+        class Failed:
+            def wait(self,timeout=None):return 1
+        with patch.object(runner.subprocess,'check_output',return_value=json.dumps(self.version)), \
+             patch.object(runner.subprocess,'Popen',side_effect=self.fake_process) as build, \
+             patch.object(runner,'status'):
+            library=runner.ensure_observer(self.root,self.cache)
+            build.side_effect=None
+            build.return_value=Failed()
+            with self.assertRaises(RuntimeError):
+                runner.ensure_observer(self.root,self.cache,force_rebuild=True)
+            self.assertFalse(library.exists())
+            build.side_effect=self.fake_process
+            self.assertEqual(runner.ensure_observer(self.root,self.cache),library)
+            self.assertTrue(library.is_file())
+
+    def test_cli_rebuild_flag_is_forwarded_before_backend_start(self):
+        with patch.object(runner.sys,'argv',['runner.py','--rebuild-observer','--','--dry-run']), \
+             patch.object(runner.signal,'signal'), patch.object(runner,'status'), \
+             patch.object(runner,'ensure_observer',return_value=Path('/test/observer.so')) as build, \
+             patch.object(runner.os,'execv') as start:
+            runner.main()
+            build.assert_called_once_with(force_rebuild=True)
+            self.assertIn('--dry-run',start.call_args.args[1])
+            self.assertIn('/test/observer.so',start.call_args.args[1])
+
     def test_missing_abi_fails_without_compiling(self):
         with patch.object(runner.subprocess,'check_output',return_value='{}'), \
              patch.object(runner.subprocess,'Popen') as build:

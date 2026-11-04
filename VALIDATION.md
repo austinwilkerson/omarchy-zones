@@ -1,4 +1,4 @@
-# Validation — 0.4.1 preview
+# Validation — 0.4.3 preview
 
 ## Environment
 
@@ -9,7 +9,7 @@ custom color picker.
 
 ## Automated coverage
 
-49 Python unit tests cover layout selection and overlaps, monitor/workspace
+52 Python unit tests cover layout selection and overlaps, monitor/workspace
 precedence, strict Floating-mode gating, complete-frame geometry, all four bar
 and dock edges, scale/rotation/negative origins, uniform odd and even gaps,
 release/resize gesture state, bounded observer parsing, preference persistence,
@@ -56,3 +56,18 @@ The user reported that version 0.4.0 loaded and worked on a second machine,
 a 5090 desktop. Its exact Omarchy/Hyprland versions were not independently
 checked, and the new vertical presets have not yet been confirmed on that
 machine.
+
+
+## RC compatibility and setup recovery
+
+Verified on 2026-11-04 with Omarchy channel `rc`, package `4.5.0-1`, Hyprland
+0.56.2 and Quickshell 0.3.2. The installed observer is loaded and successful
+zone snaps appear in the current shell log. The isolated QML fixture passes
+panel loading, shared-runtime lifecycle, setup states and Retry's rebuild flag.
+
+New runner tests verify explicit rebuild routing, replacement and reuse of a
+cached helper, failed-force invalidation and subsequent recovery. A real SDK
+build in an isolated cache is deliberately replaced with invalid bytes; Retry's
+CLI rebuild path produces a new ELF shared object without touching an unrelated
+cache slot. These checks do not move windows or load the test helper into the
+parent compositor.

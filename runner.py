@@ -33,18 +33,21 @@ def build_key(root, version):
     return digest.hexdigest()[:24]
 
 
-def ensure_observer(root=ROOT, cache=None):
+def ensure_observer(root=ROOT, cache=None, *, force_rebuild=False):
     global BUILD
     version = json.loads(subprocess.check_output(['hyprctl','version','-j'], text=True, timeout=5))
     if not isinstance(version, dict) or not version.get('abiHash'):
-        raise RuntimeError('This Hyprland does not report its ABI. Omarchy Edge with Hyprland 0.56.2 is the tested version.')
+        raise RuntimeError('This Hyprland does not report its ABI. Use an Omarchy release with Floating workspace mode and a matching Hyprland SDK.')
     cache = Path(cache or os.environ.get('XDG_CACHE_HOME') or Path.home()/'.cache')
     directory = cache / 'omarchy-zones' / 'native' / build_key(root, version)
     directory.mkdir(parents=True, exist_ok=True)
     library = directory / 'observer.so'
     with (directory / '.build.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        if library.is_file():
+        if force_rebuild:
+            # Retry invalidates only this ABI/source cache, under the build lock.
+            library.unlink(missing_ok=True)
+        elif library.is_file():
             return library
         status('building', 'Preparing Zones for this Hyprland version…')
         with tempfile.TemporaryFile(mode='w+') as log:
@@ -70,14 +73,16 @@ def ensure_observer(root=ROOT, cache=None):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--rebuild-observer',action='store_true',help='Discard this cached observer and compile it again')
     parser.add_argument('backend_args', nargs=argparse.REMAINDER)
-    args = parser.parse_args().backend_args
+    options = parser.parse_args()
+    args = options.backend_args
     if args[:1] == ['--']: args=args[1:]
     signal.signal(signal.SIGTERM,stop)
     signal.signal(signal.SIGINT,stop)
     status('checking')
     try:
-        library=ensure_observer()
+        library=ensure_observer(force_rebuild=options.rebuild_observer)
     except (OSError,ValueError,RuntimeError,subprocess.SubprocessError) as error:
         status('error',str(error))
         return 78

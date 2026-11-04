@@ -20,7 +20,19 @@ Item {
   property bool ready: false
   property string setupState: "starting"
   property string setupMessage: ""
-  function retrySetup() { setupState = "starting"; setupMessage = ""; zonesd.running = false; restart.restart() }
+  property bool rebuildRequested: false
+  function retrySetup() {
+    setupState = "starting"
+    setupMessage = ""
+    rebuildRequested = true
+    zonesd.running = false
+    restart.restart()
+  }
+  function backendCommand() {
+    var command = ["python3", root.pluginDir + "/runner.py"]
+    if (rebuildRequested) command.push("--rebuild-observer")
+    return command.concat(["--", "--snap", "--settings", appearance.configPath, "--dock-depth", String(root.dockDepth)])
+  }
   function stopBackend() { restart.stop(); zonesd.running = false; previewVisible = false }
   onBackendEnabledChanged: if (ready) {
     if (backendEnabled) startBackend()
@@ -31,8 +43,9 @@ Item {
   function startBackend() {
     if (!backendEnabled || zonesd.running) return
     restart.stop()
-    zonesd.command = ["python3", root.pluginDir + "/runner.py", "--", "--snap", "--settings", appearance.configPath, "--dock-depth", String(root.dockDepth)]
+    zonesd.command = backendCommand()
     zonesd.running = true
+    rebuildRequested = false
   }
   onDockDepthChanged: if (ready) {
     previewVisible = false

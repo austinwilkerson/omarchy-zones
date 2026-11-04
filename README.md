@@ -9,9 +9,10 @@ consistent spacing and a translucent landing preview.
 
 ## Install
 
-Requires **Omarchy Edge with Floating workspace mode**. Tested with Hyprland
-0.56.2 and Quickshell 0.3.2; older Stable versions without this mode are not
-supported.
+Requires **Omarchy with Floating workspace mode**. Verified on the **RC channel,
+Omarchy 4.5.0-1**, with Hyprland 0.56.2 and Quickshell 0.3.2, as well as the earlier
+Edge setup. Releases without Floating mode are unsupported. Compatibility
+depends on that mode and a matching Hyprland SDK, rather than the channel name.
 
 ```sh
 omarchy plugin add https://github.com/austinwilkerson/omarchy-zones --enable
@@ -28,6 +29,9 @@ headers supplied by the installed Hyprland and its dependencies. No root setup,
 input-group membership or separate build command is needed on the tested
 Omarchy installation. A missing dependency or incompatible SDK produces an error
 in the panel with a **Retry setup** button rather than silently enabling snapping.
+Retry stops the current backend, discards the cached helper for this ABI/source
+combination, and compiles a replacement. Failed rebuilds leave no stale helper
+in that cache slot; unrelated cached versions are retained.
 
 ## Choose a layout
 
@@ -113,7 +117,7 @@ Zones-specific directories listed above if you want to clear them.
 
 ## Development and limits
 
-This is an early public release, tested on a dual-monitor Omarchy Edge desktop.
+This is an early public release, tested on Omarchy RC and the earlier dual-monitor Edge desktop.
 Touchscreen-only dragging, other compositors and future incompatible Hyprland
 SDKs are not validated. See [validation notes](VALIDATION.md) for test scope and
 known limitations.
