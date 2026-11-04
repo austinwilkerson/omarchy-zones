@@ -1,4 +1,4 @@
-# Validation — 0.4.3 preview
+# Floating Snap Zones — validation for 0.4.4 preview
 
 ## Current verified environment
 
@@ -76,3 +76,11 @@ build in an isolated cache is deliberately replaced with invalid bytes; Retry's
 CLI rebuild path produces a new ELF shared object without touching an unrelated
 cache slot. These checks do not move windows or load the test helper into the
 parent compositor.
+
+
+## Display-name migration
+
+Renamed from Omarchy Zones to Floating Snap Zones. The plugin ID
+`io.github.austinwilkerson.zones`, repository URL, runtime namespace and settings
+paths remain unchanged. Source-provided native helper descriptions use the new
+name while its lookup name stays compatible with existing installations.

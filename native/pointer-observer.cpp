@@ -22,7 +22,7 @@ APICALL EXPORT std::string PLUGIN_API_VERSION() { return HYPRLAND_API_VERSION; }
 
 APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE) {
     if (std::string(__hyprland_api_get_hash()) != std::string(__hyprland_api_get_client_hash()))
-        throw std::runtime_error("Omarchy Zones observer: rebuild for the running Hyprland version");
+        throw std::runtime_error("Floating Snap Zones observer: rebuild for the running Hyprland version");
     buttons = Event::bus()->m_events.input.mouse.button.listen(
         [](IPointer::SButtonEvent event, Event::SCallbackInfo&) {
             if (event.button != 272 && event.button != 273) return;
@@ -33,7 +33,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE) {
             publish();
         });
     publish();
-    return {"omarchy-zones-observer", "Read-only pointer state for Omarchy Zones", "Austin Wilkerson", "0.4.0"};
+    return {"omarchy-zones-observer", "Read-only pointer state for Floating Snap Zones", "Austin Wilkerson", "0.4.4"};
 }
 
 APICALL EXPORT void PLUGIN_EXIT() {

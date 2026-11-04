@@ -49,7 +49,7 @@ def ensure_observer(root=ROOT, cache=None, *, force_rebuild=False):
             library.unlink(missing_ok=True)
         elif library.is_file():
             return library
-        status('building', 'Preparing Zones for this Hyprland version…')
+        status('building', 'Preparing Floating Snap Zones for this Hyprland version…')
         with tempfile.TemporaryFile(mode='w+') as log:
             BUILD = subprocess.Popen(['bash',str(root/'scripts/build-observer.sh'),str(library)],
                                      stdout=log,stderr=log,start_new_session=True)
@@ -58,7 +58,7 @@ def ensure_observer(root=ROOT, cache=None, *, force_rebuild=False):
             except subprocess.TimeoutExpired:
                 os.killpg(BUILD.pid,signal.SIGKILL)
                 BUILD.wait()
-                raise RuntimeError('The native helper build timed out. Open Zones and choose Retry setup.')
+                raise RuntimeError('The native helper build timed out. Open Floating Snap Zones and choose Retry setup.')
             finally:
                 BUILD = None
             if result:

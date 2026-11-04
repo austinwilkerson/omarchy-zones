@@ -40,7 +40,7 @@ Item {
             config = merge(defaults, override)
             error = ""
         }
-        catch (e) { error = "Could not read Zones settings." }
+        catch (e) { error = "Could not read Floating Snap Zones settings." }
     }
     function save(patch) {
         config = merge(config, patch)

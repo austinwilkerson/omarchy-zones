@@ -1,11 +1,15 @@
-# Omarchy Zones
+# Floating Snap Zones
 
-**Floating windows. Your layout.**
+**Custom snap layouts for floating windows.**
 
 Zone snapping for Omarchy’s Floating workspace mode, with overlapping layouts,
 consistent spacing and a translucent landing preview.
 
-![Omarchy Zones — Layouts and Appearance panels side by side](preview.png)
+![Floating Snap Zones — Layouts and Appearance panels side by side](preview.png)
+
+Formerly **Omarchy Zones**. The display name has changed; the permanent plugin
+ID, GitHub repository URL, install/update commands and saved preferences paths
+remain the same, so existing installations keep their settings.
 
 ## Install
 
@@ -18,7 +22,7 @@ Releases without Floating mode are unsupported.
 omarchy plugin add https://github.com/austinwilkerson/omarchy-zones --enable
 ```
 
-Accept Omarchy’s normal trust and placement prompts. Zones adds its bar icon,
+Accept Omarchy’s normal trust and placement prompts. Floating Snap Zones adds its bar icon,
 builds its small native helper automatically on first start, then starts
 snapping. Open the icon to see setup progress. Subsequent starts reuse the
 compiled helper; a different running Hyprland ABI or updated helper source
@@ -35,7 +39,7 @@ in that cache slot; unrelated cached versions are retained.
 
 ## Choose a layout
 
-Open **Zones → Layouts**, select a monitor, then choose **Whole monitor** or a
+Open **Floating Snap Zones → Layouts**, select a monitor, then choose **Whole monitor** or a
 workspace override.
 
 | Preset | Zones |
@@ -58,7 +62,7 @@ left edge → left 50%, right edge → right 50%, top edge → 100% of the usabl
 landing preview showing its complete frame. Pausing during a drag does not snap,
 and a resize gesture preserves its manual size.
 
-Zones activates only in Omarchy’s saved **Floating workspace mode**. Individually
+Floating Snap Zones activates only in Omarchy’s saved **Floating workspace mode**. Individually
 floated windows in Tiling or Scrolling workspaces do not activate it. Changing
 settings affects the next snap; it does not rearrange existing windows.
 
@@ -94,7 +98,7 @@ consume events before ordinary shortcuts can observe them.
 
 The helper does not consume events, add keybindings, read input devices, record
 keystrokes or send network requests. It is compiled locally and checks the
-running compositor’s ABI before registering its event listener. Disabling Zones
+running compositor’s ABI before registering its event listener. Disabling Floating Snap Zones
 stops its backend and unloads the helper it loaded. No compiled binaries are
 shipped in the repository.
 
