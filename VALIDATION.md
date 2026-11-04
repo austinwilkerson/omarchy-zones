@@ -1,9 +1,14 @@
 # Validation — 0.4.3 preview
 
-## Environment
+## Current verified environment
 
-Tested on Omarchy Edge, Hyprland 0.56.2 and Quickshell 0.3.2, with an ultrawide
-and laptop display at 1.25 scaling. The user confirmed preview alignment,
+Omarchy **RC Channel**, package 4.5.0-1, Hyprland 0.56.2 and Quickshell 0.3.2.
+See the RC compatibility and setup recovery section for the November 4 checks.
+
+## Earlier integration environment
+
+The original checks used Omarchy Edge, Hyprland 0.56.2 and Quickshell 0.3.2,
+with an ultrawide and laptop display at 1.25 scaling. The user confirmed preview alignment,
 landing positions and titlebar clearance on both monitors, and is using the
 custom color picker.
 
@@ -41,7 +46,7 @@ hardware compatibility claim is made.
 
 ## Limits
 
-- Floating workspace mode is required; older Stable releases are unsupported.
+- Floating workspace mode is required; releases without that capability are unsupported.
 - Native compilation depends on the installed Hyprland SDK matching the running
   compositor. An incompatible SDK must be corrected before retrying setup.
 - Touchscreen-only dragging and other compositors have not been validated.

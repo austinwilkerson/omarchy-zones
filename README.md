@@ -9,10 +9,10 @@ consistent spacing and a translucent landing preview.
 
 ## Install
 
-Requires **Omarchy with Floating workspace mode**. Verified on the **RC channel,
-Omarchy 4.5.0-1**, with Hyprland 0.56.2 and Quickshell 0.3.2, as well as the earlier
-Edge setup. Releases without Floating mode are unsupported. Compatibility
-depends on that mode and a matching Hyprland SDK, rather than the channel name.
+Verified on **Omarchy RC Channel (4.5.0-1)** with Hyprland 0.56.2 and
+Quickshell 0.3.2. Requires Floating workspace mode and a matching Hyprland SDK.
+Compatibility depends on those capabilities rather than the channel name.
+Releases without Floating mode are unsupported.
 
 ```sh
 omarchy plugin add https://github.com/austinwilkerson/omarchy-zones --enable
@@ -117,7 +117,8 @@ Zones-specific directories listed above if you want to clear them.
 
 ## Development and limits
 
-This is an early public release, tested on Omarchy RC and the earlier dual-monitor Edge desktop.
+This is an early public release, verified on Omarchy RC Channel with earlier
+dual-monitor integration coverage recorded in the validation notes.
 Touchscreen-only dragging, other compositors and future incompatible Hyprland
 SDKs are not validated. See [validation notes](VALIDATION.md) for test scope and
 known limitations.
