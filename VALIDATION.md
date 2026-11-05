@@ -1,9 +1,9 @@
-# Floating Snap Zones — validation for 0.4.4 preview
+# Floating Snap Zones — validation for 0.4.5 preview
 
 ## Current verified environment
 
-Omarchy **RC Channel**, package 4.5.0-1, Hyprland 0.56.2 and Quickshell 0.3.2.
-See the RC compatibility and setup recovery section for the November 4 checks.
+Omarchy **Stable**, package 4.5.0-3, Hyprland 0.56.2 and Quickshell 0.3.2.
+Earlier RC and Edge results are retained below.
 
 ## Earlier integration environment
 
@@ -21,7 +21,7 @@ release/resize gesture state, bounded observer parsing, preference persistence,
 stacked horizontal-row layouts, input validation, build-cache reuse and invalidation, and build failure handling.
 
 Separate Quickshell fixtures verify theme and custom color bindings, picker
-synchronization, preference persistence, all six layout choices, workspace
+synchronization, preference persistence, all eight layout choices, workspace
 inheritance, shared coordinator references and setup progress/error states.
 These fixtures do not start a backend against the parent desktop.
 
@@ -84,3 +84,18 @@ Renamed from Omarchy Zones to Floating Snap Zones. The plugin ID
 `io.github.austinwilkerson.zones`, repository URL, runtime namespace and settings
 paths remain unchanged. Source-provided native helper descriptions use the new
 name while its lookup name stays compatible with existing installations.
+
+## Stable 4.5 compatibility
+
+Verified on 2026-11-05 with channel `stable`, package `4.5.0-3`, Hyprland
+0.56.2 and Quickshell 0.3.2. All 52 Python tests pass. The repeatable
+`bash tests/check-qml.sh` fixture loads settings, checks all eight presets,
+setup progress/errors, forced Retry routing and shared coordinator lifecycle
+without starting a desktop backend or writing preferences.
+
+The native observer compiles against the installed Stable SDK in an isolated
+cache; a second invocation reuses the same shared object. The installed
+observer remains loaded. Its native code and 0.4.4 helper version are unchanged
+in this 0.4.5 documentation/test update; the existing ABI-specific cache remains
+valid. The earlier nested drag/placement results above were not repeated on
+Stable and remain separately scoped.

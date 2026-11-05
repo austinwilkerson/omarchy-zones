@@ -13,7 +13,7 @@ remain the same, so existing installations keep their settings.
 
 ## Install
 
-Verified on **Omarchy RC Channel (4.5.0-1)** with Hyprland 0.56.2 and
+Verified on **Omarchy Stable 4.5 (4.5.0-3)** with Hyprland 0.56.2 and
 Quickshell 0.3.2. Requires Floating workspace mode and a matching Hyprland SDK.
 Compatibility depends on those capabilities rather than the channel name.
 Releases without Floating mode are unsupported.
@@ -121,7 +121,7 @@ Zones-specific directories listed above if you want to clear them.
 
 ## Development and limits
 
-This is an early public release, verified on Omarchy RC Channel with earlier
+This is an early public release, verified on Omarchy Stable 4.5 with earlier
 dual-monitor integration coverage recorded in the validation notes.
 Touchscreen-only dragging, other compositors and future incompatible Hyprland
 SDKs are not validated. See [validation notes](VALIDATION.md) for test scope and
@@ -130,6 +130,7 @@ known limitations.
 ```sh
 python3 -m unittest discover -s tests -v
 omarchy plugin validate .
+bash tests/check-qml.sh
 python3 zonesd.py --dry-run --monitor 4096x1152 --pointer 2000,700
 ```
 
