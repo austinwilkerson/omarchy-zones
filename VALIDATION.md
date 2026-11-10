@@ -1,9 +1,25 @@
-# Floating Snap Zones — validation for 0.4.5 preview
+# Floating Snap Zones validation
 
 ## Current verified environment
 
 Omarchy **Stable**, package 4.5.0-3, Hyprland 0.56.2 and Quickshell 0.3.2.
 Earlier RC and Edge results are retained below.
+
+## Runtime state audit
+
+| Workflow | Owner | States and transition rules |
+| --- | --- | --- |
+| Shared backend ownership | [Runtime.qml](Runtime.qml) | The first widget starts the coordinator. Additional widgets share it. The last widget requests shutdown. |
+| Worker and setup | [Service.qml](Service.qml), [runner.py](runner.py) | Idle → starting → running. Observer failure can leave the worker degraded. Shutdown ignores late output and waits for exit before replacement. Unexpected exit enters backoff. Setup exit 78 enters failed until Retry or a fresh enable. Explicit Retry forces a rebuild. |
+| Native observer and cache | [runner.py](runner.py), [zones/observer.py](zones/observer.py) | Check the versioned cache or build into it. Connect, validate pointer frames and unload on exit when this process owns the helper. |
+| Window drag and landing | [zones/drag.py](zones/drag.py), [zonesd.py](zonesd.py) | Distinguish drag from resize and cancel when the window changes. Preview an eligible Floating target while held. Recheck on release, snap once and clear the preview. Per-window guards track movement and size reconciliation. |
+| Overlay | [Service.qml](Service.qml) | A running worker can publish a preview on one output. Clear, stop, exit or observer failure resets the whole preview. |
+| Layout scope and inheritance | [LayoutSettings.qml](LayoutSettings.qml), [Appearance.qml](Appearance.qml) | Monitor/workspace selection edits one scope. Workspace-specific settings take precedence. Clearing an override restores inheritance. |
+| Appearance and persistence | [Settings.qml](Settings.qml), [ColorPicker.qml](ColorPicker.qml), [Appearance.qml](Appearance.qml), [settings.py](settings.py) | Theme or custom color feeds the preview. Edits apply immediately in the panel, queue, then persist atomically. Reload waits for outstanding edits. A failed write reconciles with disk and retains its error until a successful save. |
+
+`bash tests/check-qml.sh` exercises setup failure, explicit Retry, late output
+during shutdown, re-enabling before exit, automatic restart after a crash, and
+preference write failure and recovery in temporary storage.
 
 ## Earlier integration environment
 

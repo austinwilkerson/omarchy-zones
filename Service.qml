@@ -12,47 +12,86 @@ Item {
   property bool backendEnabled: true
 
   readonly property string pluginDir: decodeURIComponent(String(Qt.resolvedUrl(".")).replace(/^file:\/\//, ""))
-  readonly property string zonesdPath: pluginDir + "/zonesd.py"
 
   // Live theme binding — updates when Commons.Color.accent changes.
   readonly property int dockDepth: Commons.Style.spacing.xs
     + Math.round(36 * Commons.Style.fontScale) + Commons.Style.spacing.md * 2
-  property bool ready: false
-  property string setupState: "starting"
+  property bool initialized: false
+  property string backendPhase: "idle"
+  property int workerDockDepth: 0
+  property string setupProgress: "starting"
+  readonly property string setupState: {
+    if (backendPhase === "running") return "ready"
+    if (backendPhase === "failed" || backendPhase === "degraded") return "error"
+    return backendPhase === "starting" ? setupProgress : backendPhase
+  }
   property string setupMessage: ""
   property bool rebuildRequested: false
   function retrySetup() {
-    setupState = "starting"
-    setupMessage = ""
+    if (!backendEnabled) return
     rebuildRequested = true
-    zonesd.running = false
-    restart.restart()
+    stopBackend()
   }
   function backendCommand() {
     var command = ["python3", root.pluginDir + "/runner.py"]
     if (rebuildRequested) command.push("--rebuild-observer")
     return command.concat(["--", "--snap", "--settings", appearance.configPath, "--dock-depth", String(root.dockDepth)])
   }
-  function stopBackend() { restart.stop(); zonesd.running = false; previewVisible = false }
-  onBackendEnabledChanged: if (ready) {
-    if (backendEnabled) startBackend()
-    else stopBackend()
-  }
-  Component.onDestruction: stopBackend()
-
-  function startBackend() {
-    if (!backendEnabled || zonesd.running) return
-    restart.stop()
-    zonesd.command = backendCommand()
-    zonesd.running = true
-    rebuildRequested = false
-  }
-  onDockDepthChanged: if (ready) {
+  function clearPreview() {
     previewVisible = false
-    zonesd.running = false
+    previewZone = ""
+    previewMonitor = ""
+    previewAddress = ""
+    previewX = 0; previewY = 0; previewW = 0; previewH = 0
+  }
+  function scheduleRestart() {
+    backendPhase = "backoff"
     restart.restart()
   }
-  Component.onCompleted: { ready = true; startBackend() }
+  function stopBackend() {
+    restart.stop()
+    clearPreview()
+    setupMessage = ""
+    if (backendPhase === "stopping") return
+    if (zonesd.running) {
+      backendPhase = "stopping"
+      zonesd.running = false
+    } else if (backendEnabled) scheduleRestart()
+    else backendPhase = "idle"
+  }
+  onBackendEnabledChanged: if (initialized) {
+    if (backendEnabled && backendPhase !== "stopping") startBackend()
+    if (!backendEnabled) {
+      rebuildRequested = false
+      stopBackend()
+    }
+  }
+  Component.onDestruction: {
+    restart.stop()
+    zonesd.running = false
+  }
+
+  function startBackend() {
+    if (!backendEnabled || zonesd.running || backendPhase === "stopping") return
+    restart.stop()
+    setupProgress = "starting"
+    setupMessage = ""
+    workerDockDepth = dockDepth
+    zonesd.command = backendCommand()
+    rebuildRequested = false
+    backendPhase = "starting"
+    zonesd.running = true
+  }
+  function backendExited(code) {
+    clearPreview()
+    if (!backendEnabled) backendPhase = "idle"
+    else if (backendPhase !== "stopping" && code === 78) backendPhase = "failed"
+    else scheduleRestart()
+  }
+  onDockDepthChanged: if (backendPhase === "running" || backendPhase === "degraded") {
+    stopBackend()
+  }
+  Component.onCompleted: { initialized = true; startBackend() }
 
   Appearance { id: appearance }
   readonly property color shade: appearance.shade
@@ -67,6 +106,7 @@ Item {
   property int previewH: 0
 
   function handleZonesdLine(line) {
+    if (backendPhase !== "starting" && backendPhase !== "running" && backendPhase !== "degraded") return
     var t = String(line || "").trim()
     if (!t.length || t.charAt(0) !== "{") {
       if (t.length) console.log("zones:", t)
@@ -78,16 +118,21 @@ Item {
       console.log("zones:", t)
       return
     }
-    if (msg.event === "setup") {
-      setupState = msg.state || "error"
+    if (msg.event === "setup" && backendPhase === "starting") {
+      setupProgress = msg.state || "error"
       setupMessage = msg.message || ""
-    } else if (msg.event === "ready") {
-      setupState = "ready"
-      setupMessage = ""
+    } else if (msg.event === "ready" && backendPhase === "starting") {
+      // Theme metrics can settle while the native helper is being built.
+      if (workerDockDepth !== dockDepth) stopBackend()
+      else {
+        backendPhase = "running"
+        setupMessage = ""
+      }
     } else if (msg.event === "warning" && String(msg.message).indexOf("Pointer observer unavailable") === 0) {
-      setupState = "error"
+      backendPhase = "degraded"
       setupMessage = msg.message
-    } else if (msg.event === "preview" && msg.rect) {
+      clearPreview()
+    } else if (msg.event === "preview" && msg.rect && backendPhase === "running") {
       previewMonitor = msg.monitor || ""
       previewZone = msg.zone || ""
       previewAddress = msg.address || ""
@@ -97,9 +142,7 @@ Item {
       previewH = msg.rect.h || 0
       previewVisible = previewW > 0 && previewH > 0
     } else if (msg.event === "preview-clear") {
-      previewVisible = false
-      previewZone = ""
-      previewAddress = ""
+      clearPreview()
     } else if (msg.event === "snap-candidate") {
       console.log("zones: snap", msg.zone, JSON.stringify(msg.rect), msg.applied ? "applied" : "log-only")
     } else {
@@ -120,10 +163,7 @@ Item {
         if (t.length > 0) console.warn("zones:", t)
       }
     }
-    onExited: function(code) {
-      root.previewVisible = false
-      if (root.backendEnabled && code !== 78) restart.restart()
-    }
+    onExited: function(code) { root.backendExited(code) }
   }
 
   Timer {

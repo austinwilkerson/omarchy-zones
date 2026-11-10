@@ -10,7 +10,9 @@ Item {
     property var defaults: ({})
     property var config: ({})
     property var pending: ({})
-    property string error: ""
+    property string readError: ""
+    property string writeError: ""
+    readonly property string error: writeError || readError
     readonly property int gap: Number.isInteger(config.gap_px) ? config.gap_px : 4
     readonly property var preview: config.preview || ({})
     readonly property string choice: preview.color || "accent"
@@ -35,12 +37,14 @@ Item {
             (config.monitors || {})[monitor] || config.default || "columns-mid50"
     }
     function load() {
+        // A reload of the previous file must not undo a queued edit.
+        if (writer.running || Object.keys(pending).length) return
         try {
             var override = JSON.parse(file.text() || "{}")
             config = merge(defaults, override)
-            error = ""
+            readError = ""
         }
-        catch (e) { error = "Could not read Floating Snap Zones settings." }
+        catch (e) { readError = "Could not read Floating Snap Zones settings." }
     }
     function save(patch) {
         config = merge(config, patch)
@@ -73,16 +77,16 @@ Item {
         path: root.configPath
         watchChanges: true
         printErrors: false
-        onLoaded: if (!writer.running && !Object.keys(root.pending).length) root.load()
+        onLoaded: root.load()
         onFileChanged: reload()
-        onLoadFailed: if (!writer.running) root.load()
+        onLoadFailed: root.load()
     }
     Timer { id: debounce; interval: 250; onTriggered: root.flush() }
     Process {
         id: writer
-        stderr: StdioCollector { onStreamFinished: if (text.trim()) root.error = text.trim() }
+        stderr: StdioCollector { id: diagnostics }
         onExited: function(code) {
-            if (code === 0) root.error = ""
+            root.writeError = code === 0 ? "" : diagnostics.text.trim() || "Could not save Floating Snap Zones settings."
             file.reload()
             if (Object.keys(root.pending).length) debounce.restart()
         }
