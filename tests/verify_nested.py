@@ -38,11 +38,13 @@ def run(args):
         parent_socket = parent_runtime / parent_socket
     evidence = []
     args.artifacts.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix='zones-nested-') as scratch_name:
+    # Hyprland's long instance signature must fit in a Unix socket path.
+    with tempfile.TemporaryDirectory(prefix='z-', dir='/tmp') as scratch_name:
         scratch = Path(scratch_name)
         env = dict(os.environ, XDG_RUNTIME_DIR=str(scratch), WAYLAND_DISPLAY=str(parent_socket),
                    AQ_BACKEND='wayland', HYPRLAND_NO_SD_NOTIFY='1', HYPRLAND_NO_SD_VARS='1',
-                   XDG_CONFIG_HOME=str(scratch/'config'), XDG_STATE_HOME=str(scratch/'state'))
+                   XDG_CONFIG_HOME=str(scratch/'config'), XDG_STATE_HOME=str(scratch/'state'),
+                   XDG_CACHE_HOME=str(scratch/'cache'))
         env.pop('HYPRLAND_INSTANCE_SIGNATURE', None)
         # Independent state makes both saved Floating-mode checks and shell
         # startup incapable of using the real user's configuration.
@@ -172,9 +174,10 @@ end
                 bar,mon,data = setbar('top')
                 daemon_log_path = args.artifacts/'daemon.log'
                 daemon_log = daemon_log_path.open('w')
-                daemon = subprocess.Popen([sys.executable,str(ROOT/'zonesd.py')],env=env,stdout=daemon_log,stderr=daemon_log)
+                daemon = subprocess.Popen([sys.executable,str(ROOT/'runner.py')],env=env,stdout=daemon_log,stderr=daemon_log)
                 children.append(daemon)
-                pointer = subprocess.Popen([str(args.pointer_helper.resolve()),'1280','800'],env=env,
+                bounds = hypr.logical_monitor(mon)
+                pointer = subprocess.Popen([str(args.pointer_helper.resolve()),str(int(bounds['width'])),str(int(bounds['height']))],env=env,
                                            stdin=subprocess.PIPE,text=True,stdout=log,stderr=log)
                 children.append(pointer)
                 def commands(lines):
@@ -201,8 +204,13 @@ end
                     time.sleep(1.05)
                     return before
                 try:
-                    time.sleep(.5)
-                    if daemon.poll() is not None: raise AssertionError(daemon_log_path.read_text())
+                    def observer_ready():
+                        if daemon.poll() is not None:
+                            raise AssertionError(daemon_log_path.read_text())
+                        return events('ready') and any(
+                            item['name'] == 'omarchy-zones-observer' for item in qjson('plugin', 'list'))
+
+                    wait_for(observer_ready, 'native observer startup', seconds=60)
                     before = place()
                     ctl("dispatch", f'hl.dsp.focus({{ window = "address:{before["address"]}" }})')
                     drag_start(430,360)

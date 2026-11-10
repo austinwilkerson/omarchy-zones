@@ -21,6 +21,12 @@ Earlier RC and Edge results are retained below.
 during shutdown, re-enabling before exit, automatic restart after a crash, and
 preference write failure and recovery in temporary storage.
 
+For 0.4.6 on Omarchy Stable 4.5, one Zones worker and the observer were active
+in the desktop session. A separate nested compositor built a fresh observer
+and verified all four bar edges at scales 1 and 1.25, drag release with full
+decorations, manual resize preservation, and suppression in saved Tiling
+mode. One physical display was connected during this check.
+
 ## Earlier integration environment
 
 The original checks used Omarchy Edge, Hyprland 0.56.2 and Quickshell 0.3.2,
