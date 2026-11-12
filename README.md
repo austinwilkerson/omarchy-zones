@@ -15,6 +15,7 @@ remain the same, so existing installations keep their settings.
 
 Verified on **Omarchy Stable 4.5 (4.5.0-3)** with Hyprland 0.56.2 and
 Quickshell 0.3.2. Requires Floating workspace mode and a matching Hyprland SDK.
+The observer also builds and runs on the stock Hyprland 0.57.2 SDK and compositor.
 Compatibility depends on those capabilities rather than the channel name.
 Releases without Floating mode are unsupported.
 

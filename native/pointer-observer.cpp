@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Observe button state without consuming input, changing windows, or adding binds.
 #include <hyprland/src/plugins/PluginAPI.hpp>
+#if __has_include(<hyprland/src/ipc/s2/S2.hpp>)
+#include <hyprland/src/ipc/s2/S2.hpp>
+#else
 #include <hyprland/src/managers/EventManager.hpp>
+#endif
 #include <hyprland/src/event/EventBus.hpp>
+#include <format>
 #include <stdexcept>
+#include <utility>
 
 namespace {
 CHyprSignalListener buttons;
@@ -12,9 +18,14 @@ bool right = false;
 unsigned long sequence = 0;
 
 void publish() {
+    auto data = std::format(R"({{"left":{},"right":{},"sequence":{}}})", left, right, sequence);
+#if __has_include(<hyprland/src/ipc/s2/S2.hpp>)
+    if (auto& socket = IPC::Socket2::sock(); socket)
+        socket->postEvent({"omarchy-zones-pointer", std::move(data)});
+#else
     if (g_pEventManager)
-        g_pEventManager->postEvent({"omarchy-zones-pointer", std::format(
-            R"({{"left":{},"right":{},"sequence":{}}})",left,right,sequence)});
+        g_pEventManager->postEvent({"omarchy-zones-pointer", std::move(data)});
+#endif
 }
 }
 

@@ -29,6 +29,12 @@ mode. One physical display was connected during this check.
 
 ## Earlier integration environment
 
+For 0.4.7, the full nested drag and geometry checks passed on Hyprland 0.56.2.
+In a separate nested session with the official Arch Hyprland 0.57.2-1 package
+and SDK, a fresh runner cache built and loaded the observer. A virtual pointer
+produced press and release events on the compositor socket. Stopping the
+runner unloaded the observer.
+
 The original checks used Omarchy Edge, Hyprland 0.56.2 and Quickshell 0.3.2,
 with an ultrawide and laptop display at 1.25 scaling. The user confirmed preview alignment,
 landing positions and titlebar clearance on both monitors, and is using the

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.austinwilkerson.zones",
   "name": "Floating Snap Zones",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "author": "Austin Wilkerson",
   "license": "MIT",
   "description": "Custom snap layouts for Omarchy floating windows, with overlapping zones and customizable previews.",
